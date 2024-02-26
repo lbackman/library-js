@@ -21,7 +21,21 @@
   </table>
   <dialog>
     <button autofocus>Close</button>
-    <p>This is where the new book form will be</p>
+    <p>Add a new book to your library:</p>
+    <form>
+      <label for="book">Book:</label><br>
+      <input type="text" id="book" name="book" required><br>
+      <label for="author">Author:</label><br>
+      <input type="text" id="author" name="author" required><br>
+      <label for="pages">Pages:</label><br>
+      <input type="number" id="pages" name="pages" min="1" required>
+      <p>Have you read the book?</p>
+      <input type="radio" id="yes" name="read" value="Yes" required>
+      <label for="yes">Yes</label>
+      <input type="radio" id="no" name="read" value="no" required>
+      <label for="no">No</label><br><br>
+      <input type="submit" value="Submit">
+    </form>
   </dialog>
   <button class="add-book">Add Book</button>
 </body>
