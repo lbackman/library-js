@@ -34,13 +34,16 @@ Book.prototype.toggleStatus = function() {
   this.read = !this.read
 }
 
-function addBookToLibrary() {
-  // do stuff here
+function addBookToLibrary(book, author, pages, read) {
+  const newBook = new Book(book, author, pages, read)
+  myLibrary.push(newBook)
+  library.insertAdjacentHTML('beforeend', template(myLibrary.length - 1, book, author, pages, read))
 }
 
 const dialog = document.querySelector("dialog");
 const addBookButton = document.querySelector(".add-book");
 const closeButton = document.querySelector("dialog button");
+const submitButton = document.querySelector("input[type='submit']")
 
 // "Show the dialog" button opens the dialog modally
 addBookButton.addEventListener("click", () => {
@@ -51,3 +54,26 @@ addBookButton.addEventListener("click", () => {
 closeButton.addEventListener("click", () => {
   dialog.close();
 });
+
+submitButton.addEventListener("click", (e) => {
+  e.preventDefault()
+  console.log('hi')
+  const form = document.querySelector('form')
+  const titleBook = form.querySelector('#book')
+  const titleAuthor = form.querySelector('#author')
+  const titlePages = form.querySelector('#pages')
+  const titleRead = form.querySelector('#no')
+  if (titleBook != '' && titleAuthor != '' && pages != '') {
+    addBookToLibrary(titleBook.value, titleAuthor.value, titlePages.value, titleRead.checked ? false : true)
+  }
+  dialog.close()
+  alert('Book added to library!')
+  clearFields(titleBook, titleAuthor, titlePages, titleRead)
+})
+
+const clearFields = function(book, author, pages, read) {
+  book.value = ''
+  author.value = ''
+  pages.value = ''
+  read.checked = true
+}
