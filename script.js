@@ -14,12 +14,12 @@ myLibrary.push(silmarillion)
 myLibrary.push(lostTime)
 
 const template = function(idx, book, author, pages, read) {
-  return `<tr data-attribute="${idx}">
+  return `<tr class="library-entry" data-attribute="${idx}">
     <td>${book}</td>
     <td>${author}</td>
     <td>${pages}</td>
-    <td>${read === true ? "Yes" : "No"}</td>
-    <td><button class="toggle-read">Mark read</button></td>
+    <td class="read">${read === true ? "Yes" : "No"}</td>
+    <td><button class="toggle-read">${read === true ? "Mark unread" : "Mark read"}</button></td>
     <td><button class="delete">Delete</button></td>
     </tr>`
 }
@@ -30,8 +30,19 @@ myLibrary.forEach((title, idx) => {
 })
 
 Book.prototype.toggleStatus = function() {
-  console.log(this)
   this.read = !this.read
+}
+
+const toggleReadText = function(element, status) {
+  const readBox = element.querySelector('.read')
+  const btn = element.querySelector('.toggle-read')
+  if (status) {
+    readBox.textContent = 'Yes'
+    btn.textContent = 'Mark unread'
+  } else {
+    readBox.textContent = 'No'
+    btn.textContent = 'Mark read'
+  }
 }
 
 function addBookToLibrary(book, author, pages, read) {
@@ -47,17 +58,16 @@ const submitButton = document.querySelector("input[type='submit']")
 
 // "Show the dialog" button opens the dialog modally
 addBookButton.addEventListener("click", () => {
-  dialog.showModal();
-});
+  dialog.showModal()
+})
 
 // "Close" button closes the dialog
 closeButton.addEventListener("click", () => {
-  dialog.close();
-});
+  dialog.close()
+})
 
 submitButton.addEventListener("click", (e) => {
   e.preventDefault()
-  console.log('hi')
   const form = document.querySelector('form')
   const titleBook = form.querySelector('#book')
   const titleAuthor = form.querySelector('#author')
@@ -69,6 +79,27 @@ submitButton.addEventListener("click", (e) => {
   dialog.close()
   alert('Book added to library!')
   clearFields(titleBook, titleAuthor, titlePages, titleRead)
+})
+
+document.addEventListener("click", function(e){
+  const toggleButton = e.target.closest(".toggle-read")
+  const deleteButton = e.target.closest(".delete")
+
+  if(toggleButton) {
+    const element = toggleButton.closest(".library-entry")
+    const idx = element.dataset.attribute
+    myLibrary[idx].toggleStatus()
+    const readStatus = myLibrary[idx].read
+    toggleReadText(element, readStatus)
+    console.log(`toggle read ${idx}`)
+  }
+  if(deleteButton) {
+    const element = deleteButton.closest(".library-entry")
+    const idx = element.dataset.attribute
+    element.remove()
+    delete myLibrary[idx]
+    console.log(`deleted entry ${idx}`)
+  }
 })
 
 const clearFields = function(book, author, pages, read) {
