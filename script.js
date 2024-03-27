@@ -1,10 +1,27 @@
 const myLibrary = [];
 
-function Book(book, author, pages, read) {
-  this.book = book
-  this.author = author
-  this.pages = pages
-  this.read = read
+class Book {
+  constructor(book, author, pages, read) {
+    this.book = book;
+    this.author = author;
+    this.pages = pages;
+    this.read = read;
+  }
+
+  toggleStatus() {
+    this.read = !this.read;
+  }
+
+  template(idx) {
+    return `<tr class="library-entry" data-attribute="${idx}">
+    <td>${this.book}</td>
+    <td>${this.author}</td>
+    <td>${this.pages}</td>
+    <td class="read">${this.read === true ? "Yes" : "No"}</td>
+    <td><button class="toggle-read">${this.read === true ? "Mark unread" : "Mark read"}</button></td>
+    <td><button class="delete">Delete</button></td>
+    </tr>`
+  }
 }
 
 const silmarillion = new Book('The Silmarillion', 'J.R.R Tolkien', 365, true)
@@ -13,25 +30,10 @@ const lostTime = new Book('In Search of Lost Time', 'Marcel Proust', 4215, false
 myLibrary.push(silmarillion)
 myLibrary.push(lostTime)
 
-const template = function(idx, book, author, pages, read) {
-  return `<tr class="library-entry" data-attribute="${idx}">
-    <td>${book}</td>
-    <td>${author}</td>
-    <td>${pages}</td>
-    <td class="read">${read === true ? "Yes" : "No"}</td>
-    <td><button class="toggle-read">${read === true ? "Mark unread" : "Mark read"}</button></td>
-    <td><button class="delete">Delete</button></td>
-    </tr>`
-}
-
 const library = document.querySelector('.library tbody')
 myLibrary.forEach((title, idx) => {
-  library.insertAdjacentHTML('beforeend', template(idx, title.book, title.author, title.pages, title.read))
+  library.insertAdjacentHTML('beforeend', title.template(idx))
 })
-
-Book.prototype.toggleStatus = function() {
-  this.read = !this.read
-}
 
 const toggleReadText = function(element, status) {
   const readBox = element.querySelector('.read')
@@ -48,7 +50,7 @@ const toggleReadText = function(element, status) {
 function addBookToLibrary(book, author, pages, read) {
   const newBook = new Book(book, author, pages, read)
   myLibrary.push(newBook)
-  library.insertAdjacentHTML('beforeend', template(myLibrary.length - 1, book, author, pages, read))
+  library.insertAdjacentHTML('beforeend', newBook.template(myLibrary.length - 1))
 }
 
 const dialog = document.querySelector("dialog");
